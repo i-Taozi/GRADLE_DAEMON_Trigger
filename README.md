@@ -1,149 +1,77 @@
-# ProviGen [![Build Status](https://travis-ci.org/TimotheeJeannin/ProviGen.png?branch=master)](https://travis-ci.org/TimotheeJeannin/ProviGen) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.provigen/ProviGen-lib/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.provigen/ProviGen-lib/)
+Open Training is looking for a new maintainer
+=============
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
-Easily make a [ContentProvider] from a [ContractClass].    
+I don't have enough time to work regularly on this project anymore. If anyone wants to continue this project please contact me.
 
-## Setup
 
-* Follow the [installation guide](https://github.com/TimotheeJeannin/ProviGen/wiki/Installation-Guide).
+Open Training
+=============
 
-* Annotate your ContractClass.
+Open Training is an Android app for planning your fitness training.
 
-```java
-public interface MyContract extends ProviGenBaseContract {
 
-	@Column(Type.INTEGER)
-	public static final String MY_INT_COLUMN = "int";
+Where can I download the app?
+-----------------------------
+Google Play Store: https://play.google.com/store/apps/details?id=de.skubware.opentraining
 
-	@Column(Type.TEXT)
-	public static final String MY_STRING_COLUMN = "string";
+F-Droid.org (catalogue of FOSS): https://f-droid.org/repository/browse/?fdid=de.skubware.opentraining
 
-	@ContentUri
-	public static final Uri CONTENT_URI = Uri.parse("content://com.myapp/table_name");
-}
-```
+You can also use this QR-Codes:
 
-* Extend the ProviGenProvider.
+<a href='http://www.qrcode-generator.de' border='0' style='cursor:default'><img src='https://chart.googleapis.com/chart?cht=qr&chl=https://play.google.com/store/apps/details?id=de.skubware.opentraining&chs=150x150&choe=UTF-8&chld=L|2' alt='qrcodes'></a>
+<a href='http://www.qrcode-generator.de' border='0' style='cursor:default'><img src='https://chart.googleapis.com/chart?cht=qr&chl=https://f-droid.org/repository/browse/?fdid=de.skubware.opentraining&chs=150x150&choe=UTF-8&chld=L|2' alt='hier qr code erstellen'></a>
 
-```java
-public class MyContentProvider extends ProviGenProvider {
+Programming language
+--------------------
+Java (and some shell scripts for development)
 
-    private static Class[] contracts = new Class[]{MyContract.class};
+License
+-------
+GPL 3
+Exercises are CC licensed(currently all CC-BY-SA)
 
-    @Override
-    public SQLiteOpenHelper openHelper(Context context) {
-        return new ProviGenOpenHelper(getContext(), "dbName", null, 1, contracts);
-    }
+Translations
+------------
+English, German. More wanted! Help here: http://crowdin.net/project/opentraining
 
-    @Override
-    public Class[] contractClasses() {
-        return contracts;
-    }
-}
-```
 
-* Add your provider in your manifest.
+Building Instruction
+====================
 
-```xml
-<provider
-    android:name="com.myapp.MyContentProvider"
-    android:authorities="com.myapp" >
-</provider>
-```
+Requirements
+------------
 
-* You're done.
+  * Git
+  * Android-SDK v19
+  * Android Support Repository
 
-## Usage
+Building with Eclipse (TODO: add instructions for android studio)
+--------------------- 
 
-You can make the usual insert, update, delete and query using a [ContentResolver].    
-For example querying a single row boils down to:
-```java
-getContentResolver().query(	
-	Uri.withAppendedPath(MyContract.CONTENT_URI, myId),
-	null, "", null, "");
-```
-or 
-```java
-getContentResolver().query(
-	MyContract.CONTENT_URI, null, 
-	MyContract._ID + " = ? ", new String[]{ myId }, "");
-```
+#### 1. Clone the repository
 
-## Features
+    $ git clone git://github.com/chaosbastler/opentraining.git
 
-### Table creation and contract upgrades
+#### 2. Change Eclipse workspace
 
-ProviGen comes with an implementation of the [SQLiteOpenHelper] called `ProviGenOpenHelper`.
-This default implementation will
+#### 3. Import 'app'
+    * File -> Import -> Existing Projects into Workspace
+#### 4. Import 'test'
+    * File -> Import -> Existing Projects into Workspace
 
-* automatically create the needed tables on the first application launch
-* automatically add missing columns every time the database version increases
+#### 5. Import support library
+    * Instructions: http://developer.android.com/tools/support-library/setup.html#add-library; 'Adding libraries with resources', step 1 to 4 should be enough
 
-### Notifications and observers
+#### 6. Disable Lint für support library
+    *Click right on project 'android-support-v7-appcompat' -> Properties -> Android Lint Preferences -> Ignore all
 
-ProviGen fully supports the uri notification mechanism.   
-You can safely use it with [CursorLoader]s and [ContentObserver]s.
 
-### Custom SQLiteOpenHelper
+Building with gradle
+--------------------
 
-You can provide your own implementation of the [SQLiteOpenHelper] for initial population, complex contract upgrades
-or anything else database related you want to achieve.
+#### 1. Connect your phone with USB
 
-```java
-public class MyContentProvider extends ProviGenProvider {
+#### 2. Build & Install
 
-    @Override
-    public Class[] contractClasses() {
-        return new Class[]{MyContract.class};
-    }
-
-    @Override
-    public SQLiteOpenHelper openHelper(Context context) {
-    
-        return new SQLiteOpenHelper(getContext(), "databaseName", null, 1) {
-        
-            @Override
-            public void onCreate(SQLiteDatabase database) {
-                // Automatically creates table and needed columns.
-                new TableBuilder(MyContract.class).createTable(database);
-
-                // Do initial population here.
-            }
-
-            @Override
-            public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-                // Automatically adds new columns.
-                TableUpdater.addMissingColumns(database, MyContract.class);
-
-                // Anything else related to database upgrade should be done here.
-            }
-        };
-    }
-}
-```
-
-### Data constraint
-
-You can apply a `UNIQUE` or a `NOT_NULL` constraint to a column using the appropriate `TableBuilder` methods.
-
-```java
-new TableBuilder(MyContract.class)
-        .addConstraint(MyContract.MY_INT, Constraint.UNIQUE, OnConflict.ABORT)
-        .addConstraint(MyContract.MY_STRING, Constraint.NOT_NULL, OnConflict.IGNORE)
-        .createTable(database);
-```
-
-## License
-
-This content is released under the MIT License.
-
-[SQLiteOpenHelper]: https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html
-
-[ContentObserver]: https://developer.android.com/reference/android/database/ContentObserver.html
-
-[CursorLoader]: http://developer.android.com/reference/android/content/CursorLoader.html
-
-[ContentProvider]: https://developer.android.com/reference/android/content/ContentProvider.html
-
-[ContractClass]: http://developer.android.com/guide/topics/providers/content-provider-basics.html#ContractClasses
-
-[ContentResolver]: https://developer.android.com/reference/android/content/ContentResolver.html
+    $ gradle installDebug
