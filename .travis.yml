@@ -1,30 +1,30 @@
 language: android
+env:
+  global:
+    - ADB_INSTALL_TIMEOUT=10
+  matrix:
+    - ANDROID_TARGET=android-8  ANDROID_ABI=armeabi
+    - ANDROID_TARGET=android-10 ANDROID_ABI=armeabi
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
 
 android:
   components:
-    - build-tools-23.0.1
+    - tools
+
+    # The BuildTools version
+    - build-tools-19.1.0
+
+    # The SDK version
+    - $ANDROID_TARGET
+
+    # Additional components
     - extra-android-m2repository
-    - extra-google-m2repository
-    - android-22
-  licenses:
-    - android-sdk-license-5be876d5
 
-jdk:
-#  - oraclejdk7
-  - oraclejdk8
+before_script:
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
-script:
-  - ./gradlew clean check
-
-branches:
-  except:
-    - gh-pages
-
-notifications:
-  email: false
-
-sudo: false
-
-cache:
-  directories:
-    - $HOME/.gradle
+after_success:
+  - ./gradlew -p AndroidDeviceCompatibility -b AndroidDeviceCompatibility/coverage.gradle coveralls
