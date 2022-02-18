@@ -1,12 +1,22 @@
-# IntelliJ Project files #
-*.iml
-*.ipr
-*.iws
+*.class
 
-# Gradle #
-/.gradle/
-/eclipse/
-/run/
+# Package Files #
+*.jar
+*.war
+*.ear
 /build/
-/out/
-/gdx-texturepacker.jar
+
+.gradle
+.m2
+/.nb-gradle/
+/bin/
+.settings/
+.nb-gradle-properties
+.classpath
+.project
+.settings
+.metadata
+.checkstyle
+bin/
+!/gradle/wrapper/gradle-wrapper.jar
+.idea
