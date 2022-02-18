@@ -1,31 +1,28 @@
-Archaius
-=====
-[![NetflixOSS Lifecycle](https://img.shields.io/osslifecycle/Netflix/archaius.svg)]()
+Intent Intercept Android app
+================
 
-[![Build Status](https://netflixoss.ci.cloudbees.com/buildStatus/icon?job=archaius-master)](https://netflixoss.ci.cloudbees.com/job/archaius-master/)
+[![Build Status](https://travis-ci.org/intrications/intent-intercept.svg?branch=master)](https://travis-ci.org/intrications/intent-intercept)
 
-Features
--------
+Summary: View inter-app communication
 
-Archaius includes a set of configuration management APIs used by Netflix. It provides the following functionality:
+Description:
+This app attempts to intercept as many intents as possible in order to examine
+their contents. This helps when trying to develop an app that reacts to a
+particular intent.
 
-* Dynamic, Typed Properties
-* High throughput and Thread Safe Configuration operations
-* A polling framework that allows obtaining property changes of a Configuration Source
-* A Callback mechanism that gets invoked on effective/"winning" property mutations (in the ordered hierarchy of Configurations)
-* A JMX MBean that can be accessed via JConsole to inspect and invoke operations on properties
-* Out of the box, Composite Configurations (With ordered hierarchy) for applications (and most web applications willing to use convention based property file locations)
-* Implementations of dynamic configuration sources for URLs, JDBC and Amazon DynamoDB
-* Scala dynamic property wrappers
+Some details of the intent can now be edited before resending it.
 
-Documentation
---------------
-Please see [wiki](https://github.com/Netflix/archaius/wiki) for detail documentation.
+Intent Intercept is available here:
 
-Origin
-------
-The code name for the project comes from an endangered species of Chameleons. We chose [Archaius](http://en.wikipedia.org/wiki/Archaius), as Chameleons are known for changing their color (a property) based on its environment and situation. This project was borne out of a strong desire to use dynamic property changes to effect runtime behaviors based on specific contexts.
+[![Download from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png "Download from Google Play")](https://play.google.com/store/apps/details?id=uk.co.ashtonbrsc.android.intentintercept)
+[![Download from F-Droid](https://camo.githubusercontent.com/7df0eafa4433fa4919a56f87c3d99cf81b68d01c/68747470733a2f2f662d64726f69642e6f72672f77696b692f696d616765732f632f63342f462d44726f69642d627574746f6e5f617661696c61626c652d6f6e2e706e67 "Download from F-Droid")](https://f-droid.org/repository/browse/?fdid=uk.co.ashtonbrsc.android.intentintercept)
 
-User Group
-----------
-The google group for Archaius users is https://groups.google.com/forum/#!forum/achaius-users. Email address for the group is achaius-users@googlegroups.com.
+## Translations
+
+The app currently contains English and German translations.
+
+Please help by adding translations at https://www.transifex.com/intrications/intent-intercept/
+
+## License
+Apache License, Version 2.0
+[http://www.apache.org/licenses/LICENSE-2.0.html](http://www.apache.org/licenses/LICENSE-2.0.html)
