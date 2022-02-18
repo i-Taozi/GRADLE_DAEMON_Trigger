@@ -1,36 +1,21 @@
-language: android
-
-sudo: false
-
+language: java
+install: gradle -q assemble
+script: set -o pipefail; gradle -i check | sed 's/\e\[?.*?[\@-~]//g'
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+branches:
+  except:
+    - gh-pages
 env:
   global:
-    # Initiating clean Gradle output
-    - TERM=dumb
-    # Amount of memory granted to Gradle JVM
-    - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
-    # General Android settings used in builds
-    - ANDROID_TARGET=android-19
+    - secure: "Tmj51N8U7Ya20r1+Y0s1zwG5PV/TsKC3/ycpavk34bJ8na7MRE/ZPI57x7IRNElowOf3LRMcapWjHS0BkoxUKnUTfoP0H1cpqlgjoOHSdoVOZ+aeQKca4CRNe7CSKZVPj2zRMtlerDtNxXpa7i63ZDlWWP/L61uTbBqf4Bu8d5c="
+    - DOCS_BRANCH="1.4"
+    - GEN_APIDOCS="gradle javadoc"
 
-before_install:
- - chmod a+x gradlew
- - gradle -v
- - ln -s app.properties-prod assets/app.properties
- - if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r10d-linux-x86_64.bin -O ndk.bin; else wget http://dl.google.com/android/ndk/android-ndk-r10d-linux-x86.bin -O ndk.bin; fi
- - chmod a+x ndk.bin
- - ./ndk.bin  -y | egrep -v ^Extracting
- - export ANDROID_NDK_HOME=`pwd`/android-ndk-r10d
- - export PATH=${PATH}:${ANDROID_NDK_HOME}
+after_success:
+  - chmod a+x travis/post_build.sh
+  - ./travis/post_build.sh
 
-android:
- components:
-    - android-21
-   # We are using the latest revision of Android SDK Tools
-    - platform-tools
-    - tools
-    # The BuildTools version we are using for our project
-    - build-tools-21.1.2
-
-script:
- - ${ANDROID_NDK_HOME}/ndk-build
- - ./gradlew assembleDebug
- - find . -name '*.apk' -exec ls -l {} \;
+notifications:
+  slack: puniverse:OsnbakHrYeTcLyalVgtUeI4F

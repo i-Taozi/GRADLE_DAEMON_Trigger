@@ -1,3 +1,0 @@
-[submodule "jni"]
-	path = jni
-	url = https://github.com/opentelecoms-org/codecs.git
