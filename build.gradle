@@ -1,179 +1,33 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
+/*
+ * Copyright (C) 2013 University of South Florida (sjbarbeau@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+/**
+ * Optimize build server performance by allowing disabling of pre-dexing
+ * (See http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.)
+ */
+project.ext.preDexLibs = !project.hasProperty('disablePreDex')
+
+subprojects {
+    project.plugins.whenPluginAdded { plugin ->
+        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         }
     }
-
-    dependencies {
-        classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1'
-        classpath "me.champeau.gradle:jmh-gradle-plugin:0.2.0"
-        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.1.0'
-    }
-}
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: "me.champeau.gradle.jmh"
-apply plugin: 'pmd'
-apply plugin: 'jacoco'
-apply plugin: 'ru.vyarus.animalsniffer'
-apply plugin: "com.github.hierynomus.license"
-
-sourceCompatibility = '1.6'
-targetCompatibility = '1.6'
-
-group = "com.github.akarnokd" 
-ext.githubProjectName = 'ixjava'
-
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-if (!hasProperty('mainClass')) {
-    ext.mainClass = ''
-}
-
-repositories {
-    mavenCentral()
-}
-
-apply from: file('gradle/maven.gradle')
-apply plugin: 'maven'
-apply plugin: 'osgi'
-
-dependencies {
-    signature 'org.codehaus.mojo.signature:java16:1.1@signature'
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-	archives jar
-    archives sourcesJar
-    archives javadocJar
-}
-
-jar {
-    manifest {
-        name = 'ixjava'
-        instruction 'Bundle-Vendor', 'akarnokd'
-        instruction 'Bundle-DocURL', 'https://github.com/akarnokd/ixjava'
-        instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
-        instruction 'Eclipse-ExtensibleAPI', 'true'
-    }
-}
-
-apply plugin: 'maven-publish'
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact (sourcesJar) { 
-                classifier = 'sources'
-            }
-        }
-    }
-}
-
-jmh {
-    jmhVersion = '1.17.4'
-    humanOutputFile = null
-    if (project.hasProperty('jmh')) {
-        include = ".*" + project.jmh + ".*"
-    } else {
-        include = ".*"
-    }
-}
-
-plugins.withType(EclipsePlugin) {
-    project.eclipse.classpath.plusConfigurations += [ configurations.jmh ]
-}
-
-javadoc {
-    failOnError = false
-     options.links(
-        "https://docs.oracle.com/javase/7/docs/api/"
-    )
-    
-}
-
-test {
-    maxHeapSize = "2g"
-    testLogging  {
-        events "started", "failed" // "skipped", "passed"
-    //    showStandardStreams = true
-    }
-}
-
-license {
-    header rootProject.file('HEADER')
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
-    skipExistingHeaders true
-    ignoreFailures true
-    excludes(["**/*.md", "**/*.txt"])
-}
-
-jacoco {
-    toolVersion = '0.7.9' // See http://www.eclemma.org/jacoco/.
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-}
-
-build.dependsOn jacocoTestReport
-
-check.dependsOn jacocoTestReport
-
-pmd {
-    toolVersion = '5.4.2'
-    ignoreFailures = true
-    sourceSets = [sourceSets.main]
-    ruleSets = []
-    ruleSetFiles = files('pmd.xml')
-}
-
-pmdMain {
-    reports {
-        html.enabled = true
-        xml.enabled = true
-    }
-}
-
-task pmdPrint(dependsOn: 'pmdMain') << {
-    File file = rootProject.file('build/reports/pmd/main.xml')
-    if (file.exists()) {
-
-        println("Listing first 100 PMD violations")
-
-        file.eachLine { line, count ->
-            if (count <= 100) {
-               println(line)
-            }
-        }
-
-    } else {
-        println("PMD file not found.")
-    }
-}
-
-build.dependsOn pmdPrint
-check.dependsOn pmdPrint
-
-animalsniffer {
-    annotation = 'ix.SuppressAnimalSniffer'
 }
