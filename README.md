@@ -1,54 +1,89 @@
-Spring XD
-=========
+Refined Relocation
+==============
 
-*Spring XD* makes it easy to solve common big data problems such as data ingestion and export, real-time analytics, and batch workflow orchestration.  By building on mature, open source projects such as Spring Integration, Data and Batch, Spring XD will simplify the process of creating real-word big data solutions.  XD stands for 'eXtreme Data' or 'x' as in y=mx+b :)
+# Further updates for Minecraft 1.7.10 are unlikely. For more recent versions, head over to [Refined Relocation 2](https://github.com/blay09/RefinedRelocation2).
 
-While it is possible today to build such solutions using Spring (see the [Spring Data Book][] for details and examples), Spring XD will move well beyond the framework API level by providing an out-of-the-box executable server, a pluggable module system, a high level configuration DSL, a simple model for distributing data processing instances on or off the Hadoop cluster, and more.
+This is the official GitHub page for Refined Relocation!
 
-You can fork the repository and/or monitor JIRA to see what is going on. As always, we consider the feedback from our broad and passionate community to be one of our greatest assets.
+[Minecraft Forums page](http://www.minecraftforum.net/topic/2210752-/)
 
-## Documentation
+###Compiling Refined Relocation
+***
+[Setup Java](#setup-java)
 
-Look for it on the [XD wiki](https://github.com/springsource/spring-xd/wiki). [API Documentation](http://static.springsource.org/spring-xd/docs/current-SNAPSHOT/api/) (JavaDoc) is available as well. Please also visit the SpringSource.org [project website](http://www.springsource.org/spring-xd) for more information.
+[Setup Git](#setup-git)
 
-## How to build 
+[Setup Mercurial](#setup-mercurial)
 
-Check the documentation on how to build Spring XD [here](http://docs.spring.io/spring-xd/docs/current-SNAPSHOT/reference/html/#building-spring-xd).
+[Setup Refined Relocation](#setup-refined-relocation)
 
-## Getting Help
+####Setup Java
+The Java JDK is used to compile Refined Relocation.
 
-* Get involved with the community on StackOverflow using the tag spring-xd.
+1. Download and install the Java JDK.
+	* [Windows/Mac download link](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html).  Scroll down, accept the `Oracle Binary Code License Agreement for Java SE`, and download it (if you have a 64-bit OS, please download the 64-bit version).
+	* Linux: Installation methods for certain popular flavors of Linux are listed below.  If your distribution is not listed, follow the instructions specific to your package manager or install it manually [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html).
+		* Gentoo: `emerge dev-java/oracle-jdk-bin`
+		* Archlinux: `pacman -S jdk7-openjdk`
+		* Ubuntu/Debian: `apt-get install openjdk-7-jdk`
+		* Fedora: `yum install java-1.7.0-openjdk`
+2. Windows: Set environment variables for the JDK.
+    * Go to `Control Panel\System and Security\System`, and click on `Advanced System Settings` on the left-hand side.
+    * Click on `Environment Variables`.
+    * Under `System Variables`, click `New`.
+    * For `Variable Name`, input `JAVA_HOME`.
+    * For `Variable Value`, input something similar to `C:\Program Files\Java\jdk1.7.0_51` (or wherever your Java JDK installation is), and click `Ok`.
+    * Scroll down to a variable named `Path`, and double-click on it.
+    * Append `;%JAVA_HOME%\bin` EXACTLY AS SHOWN and click `Ok`.  Make sure the location is correct; double-check just to make sure.
+3. Open up your command line and run `javac`.  If it spews out a bunch of possible options and the usage, then you're good to go.  If not, try the steps again and make sure your `Path` variable is correct.
 
-## License
+####Setup Git
+Git is used to clone Refined Relocation and update your local copy.
 
-*Spring XD* is released under version 2.0 of the [Apache License][].
+1. Download and install Git [here](http://git-scm.com/download/).
+	* *Optional*: Download and install a Git GUI client, such as Github for Windows/Mac, SmartGitHg, TortoiseGit, etc.  A nice list is available [here](http://git-scm.com/downloads/guis).
 
-## Contributing to Spring XD
+####Setup Mercurial
+Mercurial is used to clone some dependencies of Refined Relocation.
 
-Here are some ways for you to get involved 
+1. Download and install Mercurial [here](http://mercurial.selenic.com/downloads/).
 
-* Create [JIRA](https://jira.springsource.org/browse/XD) tickets for bugs and new features and comment and vote on the ones that you are interested in.
-* Follow the flow of developing on the [work board](https://jira.springsource.org/secure/RapidBoard.jspa?rapidView=6).
-* Github is for social coding: if you want to write code, we encourage contributions through pull requests from [forks of this repository](http://help.github.com/forking/).  If you want to contribute code this way, please familiarize yourself with the process outlined for contributing to Spring projects here: [Contributor Guidelines](https://github.com/SpringSource/spring-integration/wiki/Contributor-Guidelines).
+####Setup Refined Relocation
+This allows ForgeGradle to know what it's compiling.
 
-Before we accept a non-trivial patch or pull request we will need you to sign the [contributor's agreement](https://support.springsource.com/spring_committer_signup).  Signing the contributor's agreement does not grant anyone commit rights to the main repository, but it does mean that we can accept your contributions, and you will get an author credit if we do.  Active contributors might be asked to join the core team, and given the ability to merge pull requests.
+1. Open up your command line.
+2. Navigate to a place where you want to download Refined Relocation's source (eg `C:\Github\RefinedRelocation\`) by executing `mkdir [folder location]` and then `cd [folder location]`.  This location is known as `mcdev` from now on.
+3. Execute `git clone https://github.com/Dynious/RefinedRelocation.git`.  This will download Refined Relocation's source into `mcdev`.
+4. Your directory structure should now look like:
 
-## Issue Tracking
+***
+	mcdev
+	\-gradle
+	\-src
+		\-main
+			\-java
+			\-resources
+	|-Other misc Refined Relocation files (should include `build.gradle`)
+***
 
-Report issues via the [Spring XD JIRA][].
+`5.` Open a command line in your ForgeGradle folder and execute `gradlew build` if using Windows.
+	* Note: If you have [Gradle](http://www.gradle.org/) installed, use `gradle` instead.
 
-## Continuous Integration
+`6.` Gradle will now install ForgeGradle, download all needed files and build Refined Relocation. This can take a while the first time.
 
-* **Master**: https://build.spring.io/browse/XD-MASTER
-* **Sonar**: https://build.spring.io/browse/XD-SONAR
+`7.` Find your fresh copy of Refined Relocation in `mcdev/build/libs`!
 
-## Metrics
+###Contributing
+####Submitting a Pull Request
+1. If you haven't already, create a Github account.
+2. Click the `Fork` icon at the top-right of this page (below your username).
+3. Make the changes that you want to.
+4. Click `Pull Request` at the right-hand side of the gray bar directly below your fork's name.
+5. Click `Click to create a pull request for this comparison`, enter your PR's title, and make a description of what's changed.
+6. Click `Send pull request`, and you're done!
 
-Source Metrics are available via Sonar at:
-
-* https://sonar.springsource.org/dashboard/index/org.springframework.xd:spring-xd
-
-
-[Spring XD JIRA]: https://jira.springsource.org/browse/XD
-[Apache License]: http://www.apache.org/licenses/LICENSE-2.0
-[Spring Data Book]: http://bit.ly/sd-book 
+####Creating an issue
+1. Go to [the issues page](https://github.com/Dynious/RefinedRelocation/issues).
+2. Click `New Issue` right below `Star` and `Fork`.
+3. Enter your Issue's title (something that summarizes your issue), and then create a detailed description.
+4. Click `Submit new issue`, and you're done!
