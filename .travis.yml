@@ -1,22 +1,20 @@
-sudo: false
-language: java
-jdk:
-  - openjdk8
-branches:
-  only:
-    - master
+language: android
 
-install:
-  - gradle assemble
-script:
-  - gradle check
-  - gradle jacocoTestReport
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+jdk:
+ - oraclejdk7
+ - oraclejdk8
+
+android:
+  components:
+    - build-tools-23.0.1
+    - android-23
+
+    # Update Android SDK Tools
+    - tools
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email: false
