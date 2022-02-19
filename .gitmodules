@@ -1,3 +1,0 @@
-[submodule "uaa"]
-	path = uaa
-	url = https://github.com/cloudfoundry/uaa.git

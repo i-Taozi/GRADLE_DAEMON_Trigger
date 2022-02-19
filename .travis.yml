@@ -1,45 +1,38 @@
-language: java
+# We do not need sudo - switch to Docker http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: false
+
+language: android
+
+android:
+  components:
+    - build-tools-23.0.1
+    - android-23
+    - android-10
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-18
+  licenses:
+    - 'android-sdk-license-.+'
+
+jdk:
+  - oraclejdk8
+
 env:
   global:
-    - secure: "J5DYxGOG/3MjrzoEJLla/GVq2Z5Nx2oCbYEDNRbAnIIol0Dj5JK1++mXpED3+4fJKkNQBhqMZn1t6P0s/OIng0pUpg9QB7tKAMdJ+N7FKRAM5Ko8g+XhWXWAmxbob3uy2qPIEGWDczskTBmwZus/Zv3N59qwNUGq3HRiCR5BR3g="
+    - secure: "VgzgkHpv8GQtVighZP+Fnkeaj08Abk8c+HJePEkO+0c1aoeL0Lwt6yUwXrMlPhgBndLi9foDZV1PH1xVxLlnj5u5GA8hNoNY4cOxjvEpD3E9MQ0gsdKmclMsoodJpY6YQ67FMexW6IVOHxkHcbEFm7ylcobmhyyX+MHujir980s="
+    - secure: "GdbZFkBJYt7nuAg8VJytyFFwW/HPpH/kcXXtdjH7Dw5dF/rw1QlBkMCrzVPYv1QgaBW6eprdWQ1OeSi8A4puK/jMGyAxcLVjmop1167MUQjt1C9HuY1HjMiwCrTpbdHchPSQd37cg++sbJ9AXaKdfRxLZ/knMKLtcH/p8d8DHWQ="
   matrix:
-    - TESTENV=default
-cache:
-  directories:
-    - $HOME/.gradle
+    - ANDROID_TARGET=android-18 ANDROID_ABI=armeabi-v7a
+
 before_install:
-  - cp $TRAVIS_BUILD_DIR/uaa/scripts/travis/init.gradle $HOME/.gradle
-  - git pull --unshallow
+  - export TERM=dumb
+
 install:
-  - $TRAVIS_BUILD_DIR/scripts/travis/apply_spring_profiles_to_login_yaml.sh $TESTENV
-  - cat src/main/resources/login.yml
+  - ./gradlew assemble
+
 script:
-  - ./gradlew -Dspring.profiles.active=$TESTENV :cobertura
+  # JavaVM tests
+  - ./gradlew --continue check
+
 after_success:
-  - ./gradlew :coveralls
-  - python scripts/travis/travis_after_all.py
-  - export $(cat .to_export_back)
-  - |
-      if [ "$BUILD_LEADER" = "YES" ]; then
-        if [ "$BUILD_AGGREGATE_STATUS" = "others_succeeded" ]; then
-          echo "All Succeded!"
-          if [ "$TRAVIS_BRANCH" = "develop" ]; then
-            $TRAVIS_BUILD_DIR/scripts/travis/auto-bump-uaa.sh
-          fi
-        else
-          echo "Some Failed"
-        fi
-      fi
-after_failure:
-  - python scripts/travis/travis_after_all.py
-  - export $(cat .to_export_back)
-  - |
-      if [ "$BUILD_LEADER" = "YES" ]; then
-        if [ "$BUILD_AGGREGATE_STATUS" = "others_failed" ]; then
-          echo "All Failed"
-        else
-          echo "Some Failed"
-        fi
-      fi
-after_script:
-  - echo leader=$BUILD_LEADER status=$BUILD_AGGREGATE_STATUS
+  - chmod +x scripts/deploy_to_maven.sh
+  - ./scripts/deploy_to_maven.sh

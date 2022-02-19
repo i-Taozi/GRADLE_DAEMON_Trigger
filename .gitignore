@@ -1,35 +1,26 @@
-*~
-#*
-.#*
-*#
-*/src/main/java/META-INF/
-*/src/main/webapp/META-INF/
-*/src/main/*/WEB-INF/lib/
-src/main/resources/profiles/dev/
-out/
-.access_token
-.result
-.cache
-.classpath
-.project
 .DS_Store
-.settings/
-.springBeans
-bin/
+
+# Local properties
+dev.properties
+local.properties
+
+# Generated
+gen
+bin
+tmp
+
+# Eclipse
+.project
+.classpath
+.settings
+.checkstyle
+
+# IDEA
+out
+.idea
 *.iml
-*.iws
-*.ipr
-.idea/
-cargo-installs/
-.metadata/
-Servers/
-*.swp
-*.swo
-coverage.ec
-git.properties
-build.properties
-*.md.html
-phantomjsdriver.log
-.gradle/
-build/
-/classes/
+
+# Gradle
+build
+.gradle
+
