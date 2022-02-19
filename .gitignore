@@ -1,11 +1,29 @@
-.gradle
-/local.properties
-/.idea/workspace.xml
-.DS_Store
+*.keystore
+local.properties
 
+bin
+gen
+
+#Eclipse
+.classpath
+.project
+
+#IntelliJ IDEA
 .idea
 *.iml
-build
-app/src/main/gen/
+*.ipr
+*.iws
+classes
+gen-external-apklibs
 
-app/src/main/java/com/njackson/strava/StravaPrivateConstants.java
+out
+
+#emacs
+*~
+
+#maven
+target
+
+.gradle
+.DS_Store
+build
