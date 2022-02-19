@@ -1,179 +1,255 @@
+// Tasks to perform when no task is specified
+defaultTasks 'clean', 'build', 'shadow'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'com.github.johnrengelman.shadow' // Provides dependency shading
+apply plugin: 'license'
+
+group = 'com.greatmancode'
+version = '3.3.1'
+//archiveBaseName = "craftconomy3"
+description = "Craftconomy3"
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+ext.version = version;
+
+//Variables for signing & other stuff
+ext.url = 'https://github.com/greatman/craftconomy3'
+ext.bukkitVersion = '1.7.9-R0.2'
+ext."signing.keyId" = System.getenv("keyId")
+ext."signing.secretKeyRingFile" = System.getenv("secretKeyRingFile")
+ext."signing.password" = System.getenv("keyPassword")
+
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+if (ext.isReleaseVersion) {
+    apply plugin: 'signing'
+    signing {
+        required = { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+}
+
+
+def gitDescribe() {
+    try {
+        // determine git-describe output
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--always', '--dirty=*'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (e) {
+        return "unknown"
+    }
+}
+def getVersionName() {
+    try {
+        // determine git-describe output
+        def version = gitDescribe()
+
+        // add on jenkins or travis build information
+        def jenkins_build = System.getenv("BUILD_NUMBER")
+        def travis_build = System.getenv("TRAVIS_BUILD_NUMBER")
+        if (jenkins_build != null) {
+            version += "-b" + jenkins_build
+        } else if (travis_build != null) {
+            version += "-trv" + travis_build
+        } else {
+            version += "-dev"
+        }
+
+        return version
+    } catch (e) {
+        return "unknown-version"
+    }
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
-
     dependencies {
-        classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1'
-        classpath "me.champeau.gradle:jmh-gradle-plugin:0.2.0"
-        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.1.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.1'
+        classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.12.1'
     }
-}
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: "me.champeau.gradle.jmh"
-apply plugin: 'pmd'
-apply plugin: 'jacoco'
-apply plugin: 'ru.vyarus.animalsniffer'
-apply plugin: "com.github.hierynomus.license"
-
-sourceCompatibility = '1.6'
-targetCompatibility = '1.6'
-
-group = "com.github.akarnokd" 
-ext.githubProjectName = 'ixjava'
-
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-if (!hasProperty('mainClass')) {
-    ext.mainClass = ''
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
-}
+    maven { url "http://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" }
+    maven { url "http://repo.visualillusionsent.net/repository/public/" }
+    maven { url "http://repo.larry1123.net/content/groups/public/" }
+    maven { url "https://libraries.minecraft.net" }
+    maven { url "http://repo.spongepowered.org/maven" }
+    maven { url "http://repo.mcstats.org/content/repositories/releases/" }
 
-apply from: file('gradle/maven.gradle')
-apply plugin: 'maven'
-apply plugin: 'osgi'
+}
 
 dependencies {
-    signature 'org.codehaus.mojo.signature:java16:1.1@signature'
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.greatmancode', name: 'tools', version:'1.3-SNAPSHOT'
+    compile group: 'com.zaxxer', name: 'HikariCP', version:'2.4.3'
+    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.12'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version:'1.7.12'
+    compile group: 'com.h2database', name: 'h2', version:'1.4.187'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version:'3.7.15-M1'
+    testCompile group: 'junit', name: 'junit', version:'4.11'
+    testCompile group: 'org.bukkit', name: 'bukkit', version:'1.8.3-R0.1-SNAPSHOT'
+    testCompile group: 'org.reflections', name: 'reflections', version:'0.9.9-RC1'
+    compile group: 'org.projectlombok', name: 'lombok', version:'1.12.6'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-	archives jar
-    archives sourcesJar
-    archives javadocJar
-}
-
-jar {
-    manifest {
-        name = 'ixjava'
-        instruction 'Bundle-Vendor', 'akarnokd'
-        instruction 'Bundle-DocURL', 'https://github.com/akarnokd/ixjava'
-        instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
-        instruction 'Eclipse-ExtensibleAPI', 'true'
+shadowJar {
+    dependencies {
+        include(dependency('com.greatmancode:tools:1.3-SNAPSHOT'))
+        include(dependency('com.zaxxer:HikariCP:2.4.3'))
+        include(dependency('org.slf4j:slf4j-api:1.7.12'))
+        include(dependency('org.slf4j:slf4j-simple:1.7.12'))
+        include(dependency('com.h2database:h2:1.4.187'))
+        include(dependency('com.googlecode.json-simple:json-simple:1.1'))
     }
+    relocate 'com.greatmancode.tools', 'com.greatmancode.craftconomy3.tools'
+    relocate 'com.zaxxer.hikari', 'com.greatmancode.com.zaxxer.libs.hikari'
+    //relocate 'javassist', 'com.greatmancode.libs.javassist'
+    relocate 'org.slf4j', 'com.greatmancode.libs.org.slf4j'
+    //baseName = 'craftconomy3'
+    classifier = ''
 }
 
-apply plugin: 'maven-publish'
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact (sourcesJar) { 
-                classifier = 'sources'
-            }
-        }
+task filter(type: Copy) {
+    from ('src/main/resources') {
+        exclude 'config.yml'
+        exclude 'loader.yml'
     }
+    into 'build/resources/main'
+    def versionFinal = version + "-" + getVersionName()
+    expand(version: versionFinal)
 }
 
-jmh {
-    jmhVersion = '1.17.4'
-    humanOutputFile = null
-    if (project.hasProperty('jmh')) {
-        include = ".*" + project.jmh + ".*"
-    } else {
-        include = ".*"
-    }
-}
-
-plugins.withType(EclipsePlugin) {
-    project.eclipse.classpath.plusConfigurations += [ configurations.jmh ]
-}
-
-javadoc {
-    failOnError = false
-     options.links(
-        "https://docs.oracle.com/javase/7/docs/api/"
-    )
-    
-}
-
-test {
-    maxHeapSize = "2g"
-    testLogging  {
-        events "started", "failed" // "skipped", "passed"
-    //    showStandardStreams = true
-    }
-}
+jar.dependsOn filter
 
 license {
-    header rootProject.file('HEADER')
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
-    skipExistingHeaders true
-    ignoreFailures true
-    excludes(["**/*.md", "**/*.txt"])
+    header rootProject.file('HEADER.txt')
+    ext.copyright = 'Copyright (c) 2011-2016, Greatman'
+    ext.url = 'http://github.com/greatman'
+    ext.name = 'Craftconomy3'
 }
 
-jacoco {
-    toolVersion = '0.7.9' // See http://www.eclemma.org/jacoco/.
-}
 
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        html.enabled = true
+// child script to publish to a maven repo
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+
+// allow javadoc archive on Java 8 even if the javadoc isn't complete
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
     }
 }
 
-build.dependsOn jacocoTestReport
-
-check.dependsOn jacocoTestReport
-
-pmd {
-    toolVersion = '5.4.2'
-    ignoreFailures = true
-    sourceSets = [sourceSets.main]
-    ruleSets = []
-    ruleSetFiles = files('pmd.xml')
+// source jar
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.java.srcDirs
 }
 
-pmdMain {
-    reports {
-        html.enabled = true
-        xml.enabled = true
-    }
+// javadoc jar
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+artifacts {
+    archives shadowJar, javadocJar, sourcesJar
 }
 
-task pmdPrint(dependsOn: 'pmdMain') << {
-    File file = rootProject.file('build/reports/pmd/main.xml')
-    if (file.exists()) {
 
-        println("Listing first 100 PMD violations")
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+            if (ext.isReleaseVersion) {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            }
 
-        file.eachLine { line, count ->
-            if (count <= 100) {
-               println(line)
+            repository( url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: System.getenv("sonatypeUsername"), password: System.getenv("sonatypePassword"))
+            }
+
+            snapshotRepository( url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: System.getenv("sonatypeUsername"), password: System.getenv("sonatypePassword"))
+            }
+
+            pom.project {
+                name 'Craftconomy3'
+                packaging 'jar'
+                description 'Economy plugin for multiple Minecraft server implementation.'
+                url 'https://github.com/greatman/craftconomy3'
+
+                scm {
+                    connection 'https://github.com/greatman/craftconomy3.git'
+                    developerConnection 'https://github.com/greatman/craftconomy3.git'
+                    url 'https://github.com/greatman/craftconomy3'
+                }
+
+                licenses {
+                    license {
+                        name 'LGPL v3'
+                        url 'https://www.gnu.org/licenses/lgpl.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'greatman'
+                        name 'William Lebel'
+                        email 'lebelwilliam@gmail.com'
+                    }
+                }
+                repositories {
+                    repository {
+                        id 'spigot-repo'
+                        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+                    }
+                    repository {
+                        id 'canary-repo'
+                        url 'http://repo.visualillusionsent.net/repository/public/'
+                    }
+                    repository {
+                        id 'larry-repo'
+                        url 'http://repo.larry1123.net/content/groups/public/'
+                    }
+                    repository {
+                        id 'minecraft-repo'
+                        url 'https://libraries.minecraft.net'
+                    }
+                    repository {
+                        id 'sponge-repo'
+                        url 'http://repo.spongepowered.org/maven'
+                    }
+                    repository {
+                        id 'metrics-repo'
+                        url 'http://repo.mcstats.org/content/repositories/releases/'
+                    }
+                }
             }
         }
-
-    } else {
-        println("PMD file not found.")
     }
-}
-
-build.dependsOn pmdPrint
-check.dependsOn pmdPrint
-
-animalsniffer {
-    annotation = 'ix.SuppressAnimalSniffer'
 }
