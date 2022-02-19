@@ -1,18 +1,27 @@
+sudo: false
 language: android
-jdk: oraclejdk7
-env:
-  matrix:
-    - ANDROID_TARGET=android-22 ANDROID_ABI=x86
+jdk: oraclejdk8
+
 android:
   components:
-    - build-tools-22.0.1
-    - extra-android-support
-    - android-22
+    - tools
+    - tools
+    - platform-tools
+
+    # The BuildTools version used by your project
+    - build-tools-24.0.1
+    - build-tools-23.0.3
+
+    # The SDK version used to compile your project
+    - android-23
+
+    # Additional components
+    - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
+    - extra-android-support
+
 before_script:
-    - keytool -genkey -noprompt   -alias androiddebugkey  -dname "CN=mirakel.azapps.de, OU=ID, O=az, L=Mirakel, S=A, C=ANT"   -keystore new_ui/debug.keystore  -storepass android  -keypass android
-    - cp new_ui/local.properties.dist new_ui/local.properties
-    - cp new_ui/debug.keystore dashclock/debug.keystore
-script:
-  - gradle testFdroidDebugUnitTest 
+    - export GRADLE_OPTS="-XX:MaxPermSize=2048m -Xmx1536m"
+
+script: ./gradlew clean assembleDevDebug
