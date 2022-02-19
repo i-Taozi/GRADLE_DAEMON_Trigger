@@ -1,66 +1,54 @@
-[![Build Status](https://travis-ci.org/eyeem/chips-android.png)](https://travis-ci.org/eyeem/chips-android)
+PebbleBike-AndroidApp
+=====================
 
-Chips library from EyeEm
-=================
+[![Build Status](https://api.travis-ci.org/team-mount-ventoux/PebbleVentoo-AndroidApp.svg?branch=master)](https://travis-ci.org/team-mount-ventoux/PebbleVentoo-AndroidApp)
+[![Coverage Status](https://coveralls.io/repos/team-mount-ventoux/PebbleVentoo-AndroidApp/badge.png?branch=master)](https://coveralls.io/r/team-mount-ventoux/PebbleVentoo-AndroidApp?branch=v2)
 
-EyeEm style bubbles (a.k.a. chips).
+[Pebble Bike](http://www.pebblebike.com) is a GPS cycle computer for your Pebble smart watch. It uses your phone's GPS to send speed, distance and altitude data to your Pebble. You can also see your track directly on your Pebble.
 
-[![](http://cdn.eyeem.com/thumb/h/400/f88f4ba735e60e5b6faa24b252d1c1b62e375f72-1384269072)] [![](http://cdn.eyeem.com/thumb/h/400/8c660660033aac40d3d099fbc220e993c57ed7eb-1384269111)]
+Pebble Bike also has an innovative auto start feature which will auto start the bike computer on your watch when it detects you are riding a bike, using low battery technology pebble bike checks your activity every 30 seconds, so low power in fact you can leave this switched on all day.
 
-Usage
-============
-There are two main widgets which you can use:
+Pebble Bike has a Live Tracking function that sends your position every 30 seconds to the internet. If you're using it with your friends, it can receive theirs positions and display them with your own track, directly on your Pebble.
 
-- `ChipsEditText` for editable text and bubbles with an optional `AutocompletePopover`.
-- `ChipsTextView` if you plan only on displaying non-editable text with bubbles and optionally wish to provide some feedback on bubble press.
+Licensed under [MIT License](http://opensource.org/licenses/MIT)
 
-Check out included `example` app to see how to play and what can be done with this library.
+## Contributors
+* JayPS (https://github.com/jay3)  
+* Nic Jackson (https://github.com/nicholasjackson)
 
-Including in your project
-=========================
+## Translations
+* English
+* French
+* German (Hanspeter Jochmann)
+* Spanish (ZoretMan)
+* Italian (Riccardo Fantoni)
+* Japanese (Moyashi)
+* Dutch (Erwin Dirkx)
 
-You can either check out the repo manually or grab a snapshot `aar` which is hosted on sonatype repo. To do so, include this in your build.gradle file:
+## Watchface
+See also the [Pebble Bike Watch Face](https://github.com/pebble-bike/PebbleBike-PebbleWatchFace).
 
+##Info
+Pebble bike v2 is pretty much a complete re-write to implement best practice in terms of coding.  In an attempt to improve stability and reduce crashes when we develop the application futher we decided that we needed to re-architect the appliction.  
+
+To allow testability we have had to de-couple many parts of the application so to facilitate this we have used the excellent frameworks dagger (for dependency injection) and otto (event bus) written by square.  Initially we intended to use Roboelectric to run all our tests super fast without the need to install the application on a device or emulator but this has proven difficult as Android studio and Gradle do not support this method out of the box.  Due to a desire to have a simple build and setup we decided to fall back to the AndroidInstrumentation tests as recommended by Google.
+
+##Prerequisites  
+
+Gradle 2.10  
+Download ``http://www.gradle.org/downloads``  
+Set GRADLE_HOME environment var ``export GRADLE_HOME=/Applications/gradle``  
+Set Gradle bin to your exe path ``export PATH=$GRADLE_HOME/bin:$PATH``
+
+
+##Build Instructions  
+
+Update the submodules 
 ```
-dependencies {
-
-    repositories {
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
-        mavenCentral()
-        mavenLocal()
-    }
-
-    compile 'com.eyeem.chips:library:0.9.0-SNAPSHOT@aar'
-
-    // ...other dependencies
-}
+git submodule init
+git submodule update
 ```
-
-Developed By
-============
-
-* Lukasz Wisniewski [@vishna](https://twitter.com/vishna)
-
-Whorthwhile mentions
-============
-- [chips-edittext-library](https://github.com/kpbird/chips-edittext-library)
-- [chips from Google](https://android.googlesource.com/platform/frameworks/ex/+/refs/heads/master/chips)
-
-License
-=======
-
-    Copyright 2013 EyeEm Mobile GmbH
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Build the application and run the tests  
+```
+./gradlew connectedCheck
+```

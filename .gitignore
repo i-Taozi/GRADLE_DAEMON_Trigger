@@ -1,38 +1,11 @@
-#Android generated
-bin
-gen
-lint.xml
+.gradle
+/local.properties
+/.idea/workspace.xml
+.DS_Store
 
-#Eclipse
-.project
-.classpath
-.settings
-.checkstyle
-project.properties
-
-#IntelliJ IDEA
 .idea
 *.iml
-*.ipr
-*.iws
-classes
-gen-external-apklibs
+build
+app/src/main/gen/
 
-#Maven
-target
-release.properties
-pom.xml.*
-
-#Ant
-ant.properties
-local.properties
-proguard.cfg
-proguard-project.txt
-
-#Other
-.DS_Store
-tmp
-
-# Gradle stuff
-.gradle
-build/
+app/src/main/java/com/njackson/strava/StravaPrivateConstants.java
