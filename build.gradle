@@ -1,57 +1,44 @@
-plugins {
-  id "com.github.ben-manes.versions" version "0.5"
-  id "com.bmuschko.nexus" version "2.1.1"
+apply plugin: 'com.android.application'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.0'
+    }
 }
 
-apply plugin: 'checkstyle'
-apply plugin: 'java'
-
-group = 'net.floatingsun'
-version = '0.4.0-SNAPSHOT'
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
 repositories {
-    mavenCentral()
+    jcenter()
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "me.sheimi.sgit"
+        minSdkVersion 14
+        targetSdkVersion 21
+
+        versionCode 113
+        versionName "1.3.3"
+    }
+
+    lintOptions {
+        abortOnError true
+    }
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.7'
-    compile 'com.squareup.retrofit:retrofit:1.7.1'
-    compile 'com.squareup.retrofit:converter-jackson:1.7.0'
-    compile 'com.google.guava:guava:18.0'
+    compile 'com.android.support:support-v13:21.0.3'
+    compile 'com.jcraft:jsch:0.1.53'
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:3.7.1.201504261725-r'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
-    testCompile 'junit:junit:4.11'
-    testCompile 'org.assertj:assertj-core:1.7.0'
-}
-
-modifyPom {
-    project {
-        name 'jetcd'
-        description 'Java client for etcd'
-        url 'https://github.com/diwakergupta/jetcd'
-        inceptionYear '2013'
-
-        scm {
-            url 'https://github.com/diwakergupta/jetcd'
-            connection 'scm:https://github.com/diwakergupta/jetcd'
-            developerConnection 'scm:git@github.com:diwakergupta/jetcd.git'
-        }
-
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-            }
-        }
-
-        developers {
-            developer {
-                id 'diwakergupta'
-                name 'Diwaker Gupta'
-                email 'diwaker@floatingsun.net'
-            }
-        }
-    }
+    testCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:3.1.2"
+    testCompile "org.robolectric:shadows-support-v4:3.0"
 }
