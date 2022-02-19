@@ -1,49 +1,20 @@
-# built application files
-*.apk
-*.ap_
-
-# Dalvik files
-*.dex
-
-# Java class files
-*.class
-
-# Generated files
+secret.properties
+_release_keys_
+NotePad_ant
+NotePad_ant/*
+.factorypath
 bin/
-gen/
-lint.xml
-proguard/
-
-# Local configs
-local.properties
-
-# roboelectric
-tmp/
-
-# Eclipse workspace
-.metadata/
-.checkstyle
-.settings
-
-# intelli J
-.idea
-*.iml
-*.ipr
-*.iws
-
-# mac
-.Trashes
-.DS_Store
-
-# Win
-Thumbs.db
-
-# Vim
-*.swp
-
-# Keystore
-*.keystore
-
-# Gradle
-.gradle
 build/
+.gradle
+gen/
+NotePad.apk
+Notes_for_ICS_Market_Link.png
+icon/
+proguard/
+.apt_generated
+.settings*
+translate-temp/
+*~
+*iml
+.idea
+local.properties
