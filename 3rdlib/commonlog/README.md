@@ -1,4 +1,0 @@
-CommonLog
-=========
-
-Android Log library

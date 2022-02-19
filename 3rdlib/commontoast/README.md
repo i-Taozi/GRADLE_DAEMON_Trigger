@@ -1,4 +1,0 @@
-CommonToast
-===========
-
-Android Toast library

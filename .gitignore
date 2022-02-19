@@ -1,4 +1,5 @@
 # built application files
+*.apk
 *.ap_
 
 # files for the dex VM
@@ -17,19 +18,16 @@ local.properties
 # Eclipse project files
 .classpath
 .project
-.settings
 
-#build
-ant.properties
-*.keystore
-StartupNews/app/src/main/res/values/analytics.xml
-
-# IntelliJ files
-.idea
+# Intellij
 *.iml
-out/
-module_*.xml
+*.ipr
+*.iws
+.idea/
 
-#gradle
-build/
+# MAC
+.DS_Store
+
+# Gradle
 .gradle/
+build/
