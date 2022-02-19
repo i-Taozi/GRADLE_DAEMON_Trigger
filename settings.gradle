@@ -1,7 +1,4 @@
-rootProject.name='denominator'
-
-include 'model', 'core', 'route53', 'ultradns', 'dynect', 'clouddns', 'designate', 'cli'
-
-rootProject.children.each { childProject ->
-    childProject.name = 'denominator-' + childProject.name
-}
+include 'core'
+include 'java'
+include 'android'
+include 'query'
