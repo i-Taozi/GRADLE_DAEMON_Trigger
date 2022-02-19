@@ -1,29 +1,18 @@
-# Built application files
-*.apk
-*.ap_
+app/assets/opentraining-exercises/clone.sh
+app/assets/opentraining-exercises/list_files.php
+app/bin/
+app/gen/
+test/bin/
+test/gen/
+.metadata
 
-# Files for the dex VM
-*.dex
+app/svg/old/
 
-# Eclipse files
-.project
-.classpath
-.settings
+app/svg/.SVG
 
-# Idea files
-.idea
-*.iml
-
-# Java class files
-*.class
-
-# Generated files
-bin/
-gen/
-
-# Local configuration file
+# gradle
+/build
+/.gradle
+/.idea
 local.properties
-/.settings
-
-# Maven files
-target
+opentraining.iml
