@@ -1,14 +1,32 @@
-# IntelliJ XQuery Support plugin
-Provides support for [XQuery](http://www.w3schools.com/xquery/) language in version 3.0 and 3.1 in [IntelliJ IDEA](http://www.jetbrains.com/idea/)
+# :mega: :mega: UPDATE :mega: :mega:
+# Protocoder is now PHONK, check the website [https://phonk.app](https://phonk.app) and the [new repo](https://github.com/victordiaz/phonk). Thanks!
 
-[Main page](http://ligasgr.github.io/intellij-xquery/) - For any details around plugin please visit this page
+Protocoder
+==========
+[![Build Status](https://travis-ci.org/Protocoder/Protocoder.svg?branch=develop)](https://travis-ci.org/Protocoder/Protocoder)
 
-[Collaboration](http://ligasgr.github.io/intellij-xquery/collaboration.html) - Details around contribution
+Protocoder is a self-contained coding environment + framework in Javascript for quick prototyping on Android devices.
 
-[Changelog](http://ligasgr.github.io/intellij-xquery/changelog.html) - For info about historical releases
+Just install the app in your Android device and access the web IDE from your computer using the minicloud created in your phone.
+Code in javascript using the protocoder framework. No needs to write dozends of lines to access sensors or write an UI, simple to use, fast to code.
 
-[Plugin in JetBrains Plugin Repository](http://plugins.jetbrains.com/plugin/7262?pr=) - Official plugin repository page
+```
+//how to get sensor data
+sensors.accelerometer.onChange(function(x, y, z)) { 
+	console.log(x + " " + " " + y + " " + z); 
+}
 
-[GitHub Issues](https://github.com/ligasgr/intellij-xquery/issues) - request bug fixes, new features, enhancements, track current release
+//send and sms
+android.sendSMS(number, "text");
 
-[![Travis CI Build Status](https://travis-ci.org/ligasgr/intellij-xquery.svg?branch=master)](https://travis-ci.org/ligasgr/intellij-xquery)
+//play a video
+ui.addVideoView("fileName", 0, 0, 500, 200);
+```
+
+It uses a webserver and a websockets server inside the project to do some of the magic.
+
+It has support of most android hardware functionality, networking using OSC and websockets, audio synthesis and processing using Pure Data though libPd, OSMmaps, IOIO support and muuuuuuuch more.
+
+How to compile 
+--------------
+Clone the project, import it in Android Studio, make sure the API version you are using to compile is 21 or greater.
