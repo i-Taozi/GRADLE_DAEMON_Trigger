@@ -1,97 +1,68 @@
-A Git client for Android.
+#AnimeTaste(全球动画精选)[![Build Status](https://travis-ci.org/daimajia/AnimeTaste.png?branch=master)](https://travis-ci.org/daimajia/AnimeTaste)
+[English](./README-en.md)
 
-# This project is no longer being maintained. Further development on this app is now being done in the [MGit project](https://github.com/maks/MGit). Please submit all PRs and issues there.
+---------------------
+
+AnimeTaste（品赏艾尼莫）是国内首个关注独立动画的网站。
+移动版聚焦更新的全球独立动画的传播，让您随时随地能观看动画，分享快乐给更多好友。品味动画，重拾幻想。
+
+---------------------
+
+AnimeTaste For Android，为全球动画爱好者所开发。
+
+### 体验地址: [豌豆荚](http://www.wandoujia.com/apps/com.zhan_dui.animetaste) [Google Play](https://play.google.com/store/apps/details?id=com.zhan_dui.animetaste) ###
+
+### [豌豆荚110期设计奖](http://www.wandoujia.com/award/blog/com.zhan_dui.animetaste)
+
+![AnimeTaste](http://ww2.sinaimg.cn/mw690/610dc034jw1e885o9kjgzj208c0b40ty.jpg)　
+![AnimeTaste](http://ww3.sinaimg.cn/mw690/610dc034jw1e885obnjy6j208c0b43zo.jpg)
+
+### 关于AnimeTaste: ###
+
+*	[AnimeTaste官网](http://www.animetaste.net)
+*	[AnimeTaste创始人Plidezus](http://www.plidezus.net/)
+*	[开发AnimeTaste的故事](http://blog.daimajia.com/?p=549)
+
+欢迎任何方式的与AnimeTaste的合作。
+
+### 感谢以下库作者和组织
+
+*	[ShareSDK for Android](http://sharesdk.cn/) 社交关注。
+*	[Picasso](https://github.com/square/picasso) 图片缓存
+*	[Baidu-T5Player-SDK-Android](http://developer.baidu.com/wiki/index.php?title=docs/cplat/media/sdk) 百度T5 Player SDK
+*	[Android-Switch-Backport](https://github.com/BoD/android-switch-backport) Switch的兼容库
+*	[Gif-Movie-View](https://github.com/sbakhtiarov/gif-movie-view) Gif动画播放
+*	[ViewPagerIndicator](https://github.com/JakeWharton/Android-ViewPagerIndicator) 滑动画廊
+*	[SuperToasts](https://github.com/JohnPersano/SuperToasts) 扩展的Toasts弹出框
+*	[SwipeBackLayout](https://github.com/Issacw0ng/SwipeBackLayout) 滑动退出
+*	Android-Support-v7-appcompat Android ActionBar 兼容库
+*	[sdk-manager-plugin](https://github.com/JakeWharton/sdk-manager-plugin) SDK管理工具
+
+-------------------
+
+### 如何编译 ###
+
+Step-All: 
+
+**Mac和Linux用户在根目录运行`./gradlew assemble`, Windows用户运行`gradlew.bat assemble` 稍等片刻即可(会自动下载确实的SDK版本以及依赖包，可能会比较慢)。**
 
 
-## Notes
+-------
 
-[![Join the chat at https://gitter.im/sheimi/SGit](https://badges.gitter.im/sheimi/SGit.svg)](https://gitter.im/sheimi/SGit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/sheimi/SGit.svg?branch=master)](https://travis-ci.org/sheimi/SGit)
+如果出现错误或者有任何问题，请放轻松[联系我](mailto:daimajia@gmail.com)。
 
- * All repositories are stored in `[sdcard dir]/Android/data/me.sheimi.sgit/files/[repo name]`. If you want to delete this app, you can manually backup repositories from this location.
- * The GitHub repo of this project is: [sheimi/SGit](https://github.com/sheimi/SGit).
- * If you encounter any issues (bugs, crashes, etc.) and want to help improve this project, please open an issue on [GitHub](https://github.com/sheimi/SGit/issues/new) describing: what the issues are; and how they were caused, to allow for re-creation and fixing of bugs.
- * This app is for Android v4.x. It **might** work on Android v2.x, but will not be supported officially due to lack of resources for testing.
 
-## Supported Features
+###关于我：
+我是个学生，酷爱开发，擅长Android、php、python、nodejs、web，如果您手头有适合我的实习或者工作机会，欢迎邮件联系我:  [daimajia#gmail.com](mailto:daimajia@gmail.com)
 
-* Create local repositories
-* Clone remote repositories
-* Pull from origin
-* Delete local repositories
-* Browse files
-* Browse commit messages (short)
-* Checkout branches and tags
-* HTTP/HTTPS/SSH are supported (without private key passphrase)
-* Username/Password authentication is supported
-* Search local repositories
-* Private keys management
-* Manually choose code language
-* `git diff` between commits (to be enhanced)
-* Import copied repositories (that is, you can copy a repository from computer and import to SGit)
-* Checkout remote branches
-* Merge branches
-* Push merged content
-* Edit file (you must have some app that can edit file)
-* Commit and push changed files (commit all changes)
-* Committer information
-* Prompt for password
-* Choose not to save password and username (will not be saved in disk but may be temporarily saved in memory)
-* `git status`
-* Cancel when cloning
-* Add modified file to stage
-* `git rebase`
-* `git cherrypick`
-* `git checkout <file>` (reset changes of a file)
+*	[西北大学](http://zh.wikipedia.org/wiki/%E8%A5%BF%E5%8C%97%E5%A4%A7%E5%AD%A6_\(%E4%B8%AD%E5%9B%BD\))
+*	[北京师范大学](http://www.bnu.edu.cn)
+*	我的站点: [代码家](http://www.daimajia.com)
+*	我的微博:[代码家](http://weibo.com/daimajia)
+*	Twitter:[daimajia](http://twitter.com/daimajia)
+*	Instagram:[daimajia](http://instagram.com/daimajia)
 
-<a href="https://play.google.com/store/apps/details?id=me.sheimi.sgit"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" /></a>
-<a href="https://f-droid.org/repository/browse/?fdfilter=sgit&fdid=me.sheimi.sgit"><img alt="Android app on F-Droid" src="https://fsfe.org/campaigns/android/f-droid.png" width="45" /></a>
+欢迎Follow我，我会关注和开源一些Android、Node、Python、Java相关项目。
 
-## Quick start
 
-### Clone a remote repository
-
-1. Click on the *+* icon to add a new repository.
-2. Enter remote URL (see URL format below).
-3. Enter local repository name - note that this is not a path since SGit stores all repositories in the same directory on the mobile device.
-4. Username - username to use to clone the remote repo.
-5. Password - password to use to clone the remote repo.
-6. Click the *Clone* button.
-7. If all the credentials are correct, SGit will download the repository (all branches) to your device.
-
-### Create a local repository
-1. Click on the *+* icon to add a new repository.
-2. Click on *Init Local* to create a local repository.
-3. Enter the name for this repository when prompted.
-4. A local repo will be created.
-
-### URL format
-
-#### SSH URLs
-
- * SSH running on standard port (22): `ssh://username@server_name/path/to/repo`
-* SSH running on non-standard port: `ssh://username@server_name:port/path/to/repo`
-* `username` is needed - by default, SGit tries to connect as root.
-
-#### HTTP(S) URLs
-
-* HTTP(S) URL: `https://server_name/path/to/repo`
-
-## To Do List
-
- * Private key passphrase
- * Submodule support
- * Dark theme
- * Commits related to a file
- * Commit graph (low priority)
-
-## License
-
-[GPLv3](./LICENSE)
-
-## Help
-
-If you want to help improve this project, contributions are very welcome.
-
-Fork from this repo: [sheimi/SGit](https://github.com/sheimi/SGit), create a new branch, commit your changes and then send a pull request against the **master** branch of this repo.

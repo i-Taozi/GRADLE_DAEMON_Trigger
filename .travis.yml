@@ -1,33 +1,24 @@
 language: android
 android:
   components:
-    - tools
-    - platform-tools
-    - build-tools-23.0.3
-    - android-22
-    - extra-android-support
+    # Uncomment the lines below if you want to
+    # use the latest revision of Android SDK Tools
+    # - platform-tools
+    # - tools
+
+    # The BuildTools version used by your project
+    - build-tools-19.1.0
+
+    # The SDK version used to compile your project
+    - android-19
+
+    # Additional components
+    - extra-google-google_play_services
+    - extra-google-m2repository
     - extra-android-m2repository
-jdk:
-  - oraclejdk8
-env:
-  global:
-    - TERM=dumb
-before_script:
-  - export DATE=$(date)
-  - export VERSION=$(date --date="$DATE" +'%Y%m%d%H%M%S')
-script:
-  - ./gradlew clean assembleDebug testDebug 
-  - sed -i -r -e "s/(android:versionCode=\")[0-9]+(\")/\1$VERSION\2/g"
-              -e "s/(android:versionName=\"[0-9.]+)(\")/\1-dev-$VERSION\2/g"
-              src/main/AndroidManifest.xml
-  - mv src/main/java/me/sheimi/sgit src/main/java/me/sheimi/sgit_dev
-  - find . -type f -exec sed -i "s/me\.sheimi\.sgit/me\.sheimi\.sgit_dev/g" '{}' \;
-  - find src/main/res -type f -exec sed -i -r 's/(<string name="app_name">SGit)(<\/string>)/\1 Dev\2/g' '{}' \;
-  - cd ..
-after_success:
-  - curl -sSL "https://raw.githubusercontent.com/h5bp-bot/scripts/0.6.1/update_site_branch.sh" |
-         bash -s -- --commands "true"
-                    --commit-message "Build generated on $DATE by Travis [ci skip]"
-                    --directory "build"
-                    --distribution-branch "build"
-                    --source-branch "dev"
+    - addon-google_apis-google-19
+
+    # Specify at least one system image,
+    # if you need to run emulator(s) during your tests
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-x86-android-17
