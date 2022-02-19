@@ -1,68 +1,290 @@
-#AnimeTaste(全球动画精选)[![Build Status](https://travis-ci.org/daimajia/AnimeTaste.png?branch=master)](https://travis-ci.org/daimajia/AnimeTaste)
-[English](./README-en.md)
+![Icon](https://github.com/emilsjolander/sprinkles/raw/master/sprinkles.png) Sprinkles [![Build Status](https://travis-ci.org/emilsjolander/sprinkles.png)](https://travis-ci.org/emilsjolander/sprinkles)
+=========
+Sprinkles is a boiler-plate-reduction-library for dealing with databases in android applications. Some would call it a kind of ORM but I don't see it that way. Sprinkles lets SQL do what it is good at, making complex queries. SQL however is a mess (in my opinion) when is comes to everything else. This is why sprinkles helps you with things such as inserting, updating, and destroying models. Sprinkles will also help you with the tedious task of unpacking a cursor into a model. Sprinkles actively supports version 2.3 of Android and above but it should work on older versions as well.
 
----------------------
+Download
+--------
+Using gradle, add the following to your `build.gradle`. Just replace `x.x.x` with the correct version of the library (found under the releases tab).
 
-AnimeTaste（品赏艾尼莫）是国内首个关注独立动画的网站。
-移动版聚焦更新的全球独立动画的传播，让您随时随地能观看动画，分享快乐给更多好友。品味动画，重拾幻想。
+```Groovy
+dependencies {
+    compile 'se.emilsjolander:sprinkles:x.x.x'
+}
+```
 
----------------------
+If you are not using gradle for whatever reason i suggest you clone the repository and check out the latest tag.
 
-AnimeTaste For Android，为全球动画爱好者所开发。
+Getting started
+---------------
+When you have added the library to your project add a model class to it. I will demonstrate this with a `Note.java` class. I have omitted the import statements to keep it brief.
+```java
+@Table("Notes")
+public class Note extends Model {
 
-### 体验地址: [豌豆荚](http://www.wandoujia.com/apps/com.zhan_dui.animetaste) [Google Play](https://play.google.com/store/apps/details?id=com.zhan_dui.animetaste) ###
+    @Key
+	@AutoIncrement
+	@Column("id")
+	private long id;
 
-### [豌豆荚110期设计奖](http://www.wandoujia.com/award/blog/com.zhan_dui.animetaste)
+	@Column("title")
+	public String title;
 
-![AnimeTaste](http://ww2.sinaimg.cn/mw690/610dc034jw1e885o9kjgzj208c0b40ty.jpg)　
-![AnimeTaste](http://ww3.sinaimg.cn/mw690/610dc034jw1e885obnjy6j208c0b43zo.jpg)
+	@Column("body")
+	public String body;
 
-### 关于AnimeTaste: ###
+	public long getId() {
+		return id;
+	}
 
-*	[AnimeTaste官网](http://www.animetaste.net)
-*	[AnimeTaste创始人Plidezus](http://www.plidezus.net/)
-*	[开发AnimeTaste的故事](http://blog.daimajia.com/?p=549)
+}
+```
+Ok, a lot of important stuff in this short class. First of all, a model must subclass `se.emilsjolander.sprinkles.Model` and it also must have a `@Table` annotations specifying the table name that the model corresponds to. After the class declaration we have declared three members: `id`, `title` and `body`. Notice how all of them have a `@Column` annotation to mark that they are not only a member of this class but also a column of the table that this class represents. We have one last annotation in the above example. The `@AutoIncrement` annotation tells sprinkles that the field should automatically be set upon the creation of its corresponding row in the table. Key columns are the columns that are used to decide whether a model is already stored in the database when using methods such as `delete()` and `save()`.
 
-欢迎任何方式的与AnimeTaste的合作。
+Before using this class you must migrate it into the database. I recommend doing this in the `onCreate()` method of an `Application` subclass like this:
+```java
+public class MyApplication extends Application {
 
-### 感谢以下库作者和组织
+	@Override
+	public void onCreate() {
+		super.onCreate();
 
-*	[ShareSDK for Android](http://sharesdk.cn/) 社交关注。
-*	[Picasso](https://github.com/square/picasso) 图片缓存
-*	[Baidu-T5Player-SDK-Android](http://developer.baidu.com/wiki/index.php?title=docs/cplat/media/sdk) 百度T5 Player SDK
-*	[Android-Switch-Backport](https://github.com/BoD/android-switch-backport) Switch的兼容库
-*	[Gif-Movie-View](https://github.com/sbakhtiarov/gif-movie-view) Gif动画播放
-*	[ViewPagerIndicator](https://github.com/JakeWharton/Android-ViewPagerIndicator) 滑动画廊
-*	[SuperToasts](https://github.com/JohnPersano/SuperToasts) 扩展的Toasts弹出框
-*	[SwipeBackLayout](https://github.com/Issacw0ng/SwipeBackLayout) 滑动退出
-*	Android-Support-v7-appcompat Android ActionBar 兼容库
-*	[sdk-manager-plugin](https://github.com/JakeWharton/sdk-manager-plugin) SDK管理工具
+		Sprinkles sprinkles = Sprinkles.init(getApplicationContext());
 
--------------------
+        sprinkles.addMigration(new Migration() {
+            @Override
+            protected void onPreMigrate() {
+                // do nothing
+            }
 
-### 如何编译 ###
+            @Override
+            protected void doMigration(SQLiteDatabase db) {
+                db.execSQL(
+                        "CREATE TABLE Notes (" +
+                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                                "title TEXT,"+
+                                "body TEXT"+
+                        ")"
+                );
+            }
 
-Step-All: 
+            @Override
+            protected void onPostMigrate() {
+                // do nothing
+            }
+        });
+	}
 
-**Mac和Linux用户在根目录运行`./gradlew assemble`, Windows用户运行`gradlew.bat assemble` 稍等片刻即可(会自动下载确实的SDK版本以及依赖包，可能会比较慢)。**
+}
+```
 
+Now you can happily create new instances of this class and save it to the database like so:
+```java
+public void saveStuff() {
+	Note n = new Note();
+	n.title = "Sprinkles is awesome!";
+	n.body = "yup, sure is!";
+	n.save(); // when this call finishes n.getId() will return a valid id
+}
+```
 
--------
+You can also query for this note like this:
+```java
+public void queryStuff() {
+	Note n = Query.one(Note.class, "select * from Notes where title=?", "Sprinkles is awesome!").get();
+}
+```
 
+There is a lot more you can do with sprinkles so please read the next section which covers the whole API!
 
-如果出现错误或者有任何问题，请放轻松[联系我](mailto:daimajia@gmail.com)。
+API
+---
+###Annotations
+- `@Table` Used to associate a model class with a SQL table.
+- `@AutoIncrement` Used to mark a field as an auto-incrementing. The field must be an `int` or a `long`.
+- `@Column` Used to associate a class field with a SQL column.
+- `@DynamicColumn` Used to associate a class field with a dynamic SQL column such as an alias in a query.
+- `@Key` Used to mark a field as a key. Multiple keys in a class are allowed and will result in a composite key. Keys will most often want to be mapped directly to primary keys in your database.
 
+###Saving
+The save method is both an insert and an update method, the correct operation will be done depending on the model's existence in the database. The first two methods below are synchronous, the second is for use together with a transaction (more on that later). There are also two asynchronous methods, one with a callback and one without. The synchronous methods will return a boolean indicating if the model was saved or not. The asynchronous method with a callback will just not invoke the callback if saving failed.
+```java
+boolean save();
+boolean save(Transaction t);
+void saveAsync();
+void saveAsync(OnSavedCallback callback);
+```
 
-###关于我：
-我是个学生，酷爱开发，擅长Android、php、python、nodejs、web，如果您手头有适合我的实习或者工作机会，欢迎邮件联系我:  [daimajia#gmail.com](mailto:daimajia@gmail.com)
+All the save methods use this method to check if a model exists in the database. You are free to use it as well.
+```java
+boolean exists();
+```
 
-*	[西北大学](http://zh.wikipedia.org/wiki/%E8%A5%BF%E5%8C%97%E5%A4%A7%E5%AD%A6_\(%E4%B8%AD%E5%9B%BD\))
-*	[北京师范大学](http://www.bnu.edu.cn)
-*	我的站点: [代码家](http://www.daimajia.com)
-*	我的微博:[代码家](http://weibo.com/daimajia)
-*	Twitter:[daimajia](http://twitter.com/daimajia)
-*	Instagram:[daimajia](http://instagram.com/daimajia)
+###Deleting
+Similar to saving there are four methods that let you delete a model. These work in the same way as save but will not return a boolean indicating the result.
+```java
+void delete();
+void delete(Transaction t);
+void deleteAsync();
+void deleteAsync(OnDeletedCallback callback);
+```
 
-欢迎Follow我，我会关注和开源一些Android、Node、Python、Java相关项目。
+###Querying
+Start a query with on of the following static methods:
+```java
+Query.one(Class<? extends QueryResult> clazz, String sql, Object[] args);
+Query.many(Class<? extends QueryResult> clazz, String sql, Object[] args);
+Query.all(Class<? extends Model> clazz);
+```
+Notice that unlike androids built in query methods you can send in an array of objects instead of an array of strings.
 
+Once the query has been started you can get the result with two different methods:
+```java
+<T extends QueryResult> get();
+boolean getAsync(LoaderManager lm, ResultHandler<? extends Model> handler, Class<? extends Model>... respondsToUpdatedOf);
+```
 
+`get()` returns either the `QueryResult` or a list of the `QueryResult` represented by the `Class` you sent in as the first argument to the query method. `getAsync()` is the same only that the result is delivered on a callback function after executing `get()` on another thread. `getAsync()` also delivers updated results once the backing model of the query is updated if you return `true` indicating you want further updates. `getAsync()` uses loaders and therefore needs a `LoaderManager` instance. `getAsync()` also takes an optional array of classes which is used when the query relies on more models than the one you are querying for and you want the query to be updated when those models change as well.
+
+###CursorList
+All Queries return a `CursorList` subclass. This is a `Iterable` subclass which lazily unpacks a cursor into its corresponding model when you ask for the next item. This leads to having the efficiency of a `Cursor` but without the pain. Excluding the `Iterable` methods `CursorList` also provides the following methods.
+```java
+public int size();
+public T get(int pos);
+public List<T> asList();
+```
+Remember to always call `close()` on a `CursorList` instance! This will close the underlying cursor.
+
+###ModelList
+For mass saving/deletion of models you can use the `ModelList` class. It extends `ArrayList` and has the following additional methods:
+```java
+public static <E extends Model> ModelList<E> from(CursorList<E> cursorList);
+public boolean saveAll();
+public boolean saveAll(Transaction t);
+public void saveAllAsync();
+public void saveAllAsync(OnAllSavedCallback callback);
+public void deleteAll();
+public void deleteAll(Transaction t);
+public void deleteAllAsync();
+public void deleteAllAsync(OnAllDeletedCallback callback);
+```
+
+`from(CursorList<E extends Model> cursorList)` is a helper method which creates a `ModelList` from a `CursorList`, so you can e.g. delete all models from a previous query in one batch. Be aware, that the cursor is not closed for you when calling this method and you have to do it yourself!
+
+###Transactions
+Both `save()` and `delete()` methods exist which take in a `Transaction`. Here is a quick example on how to use them. If any exception is thrown while saving a model or if any model fails to save the transaction will be rolled back.
+```java
+public void doTransaction(List<Note> notes) {
+	Transaction t = new Transaction();
+	try {
+		for (Note n : notes) {
+			if (!n.save(t)) {
+				return;
+			}
+		}
+		t.setSuccessful(true);
+	} finally {
+		t.finish();
+	}
+}
+```
+
+###Callbacks
+Each model subclass can override a couple of callbacks.
+
+Use the following callback to ensure that your model is not saved in an invalid state.
+```java
+@Override
+public boolean isValid() {
+	// check model validity
+}
+```
+
+Use the following callback to update a variable before the model is created
+```java
+@Override
+protected void beforeCreate() {
+	mCreatedAt = System.currentTimeMillis();
+}
+```
+
+Use the following callback to update a variable before the model is saved. This is called directly before `beforeCreate()` if the model is saved for the first time.
+```java
+@Override
+protected void beforeSave() {
+	mUpdatedAt = System.currentTimeMillis();
+}
+```
+
+Use the following callback to clean up things related to the model but not stored in the database. Perhaps a file on the internal storage?
+```java
+@Override
+protected void afterDelete() {
+	// clean up some things?
+}
+```
+
+###Migrations
+Migrations are the way you add things to your database. I suggest putting all your migrations in the `onCreate()` method of a `Application` subclass. Here is a quick example of how that would look:
+```java
+public class MyApplication extends Application {
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+
+		Sprinkles sprinkles = Sprinkles.init(getApplicationContext());
+
+        sprinkles.addMigration(new Migration() {
+            @Override
+            protected void onPreMigrate() {
+                // do nothing
+            }
+
+            @Override
+            protected void doMigration(SQLiteDatabase db) {
+                db.execSQL(
+                        "CREATE TABLE Notes (" +
+                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                                "title TEXT,"+
+                                "body TEXT"+
+                        ")"
+                );
+            }
+
+            @Override
+            protected void onPostMigrate() {
+                // do nothing
+            }
+        });
+	}
+
+}
+```
+Migrations are performed using raw SQL, this allowes full freedom to use all of the powerfull contraints that are possible to put on columns. Two optional methods are provided that allow you do some form of processing of your data before and after a migration, this can be usefull when recreating a table with different properties but you want to keep the data that was previously stored in the now deleted table. Once a migration has been added with `sprinkles.addMigration()` it should NEVER be changed, and all new migrations should be added after the previous migration. This ensures both old and new clients will have a consistent database and you will not need to care about database versioning.
+
+###Type serializers
+Through an instance of `Sprinkles` you can register your own `TypeSerializer` instances via `registerType()` for serializing an object in your model into a column in the database. Sprinkles uses a `TypeSerializer` implementation internally for all the different data types that it supports. So check out the `se.emilsjolander.sprinkles.typeserializers` package for example implementations. These serializers will be used both when saving a model and when querying rows from the database.
+
+###ContentObservers
+Sprinkles supports ContentObservers for change notifications. By registering your models for observation you can ensure your ContentObserver will be notified of changes.
+```java
+SprinklesContentObserver observer;
+ContentObserver myCustomObserver = ...;
+
+this.observer = new SprinklesContentObserver(myCustomObserver);
+
+@Override
+public void onResume() {
+    super.onResume();
+    this.observer.register(Note.class, true); // true/false for notify descendants
+}
+
+@Override
+public void onPause() {
+    super.onPause();
+    this.observer.unregister();
+}
+```
+
+###Relationships
+Sprinkles does nothing to handle relationships for you; this is by design. You will have to use the regular ways to handle relationships in SQL. Sprinkles gives you all the tools needed for this and it works very well.
