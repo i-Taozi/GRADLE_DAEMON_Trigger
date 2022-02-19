@@ -1,68 +1,108 @@
-## Documentation
+[![Build Status](https://travis-ci.org/eyeem/potato.png?branch=master)](https://travis-ci.org/eyeem/potato)
 
-See the [Wiki](https://github.com/Netflix/Turbine/wiki) for full documentation, examples, operational details and other information.
+Potato Library
+=================
 
-## Build Status
+Sick of Android ContentProvider & SQLite database nonsense? This might be your next
+favorite library. An object oriented observable storage. Simpler than counting to potato.
 
-<a href='https://travis-ci.org/Netflix/Turbine/builds'><img src='https://travis-ci.org/Netflix/Turbine.svg?branch=2.x'></a>
+Usage
+============
+The following code snippet covers basics of this library. For more see
+sample apps.
 
-## Bugs and Feedback
+``` java
+// Let's say we need to store Tweet objects, first
+// we need to extend Storage
+class TweetStorage extends Storage<Tweet> {
 
-For bugs, questions and discussions please use the [Github Issues](https://github.com/Netflix/Turbine/issues).
+   // ...override these 2 methods
 
-## Binaries
+   @Override
+   public String id(Tweet tweet) {
+      return tweet.id;
+   }
 
-Binaries and dependency information for Maven, Ivy, Gradle and others can be found at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cnetflix%20turbine).
+   @Override
+   public Class<Tweet> classname() {
+      return Tweet.class;
+   }
 
-### Library
+   // ...and have some sort of singleton for the storage
 
-Dependencies on the library for embedded use are found on Maven Central.
+   private TweetStorage(Context context) {
+      super(context);
+   }
 
-Example for Maven:
+   private static TweetStorage sInstance = null;
 
-```xml
-<dependency>
-    <groupId>com.netflix.turbine</groupId>
-    <artifactId>turbine</artifactId>
-    <version>2.minor.patch</version>
-</dependency>
+   public static TweetStorage getInstance(){
+      if (sInstance == null) {
+         sInstance = new TweetStorage(context);
+         sInstance.init();
+      }
+      return sInstance;
+   }
+} // that's it!
+
+// ... now somewhere in your code you can do things like this:
+TweetStorage.List homeTimeline = TweetStorage.obtainList("home_timeline");
+homeTimeline.subscribe(new Subscription() {
+      @Override
+      public void onUpdate(Action action) {
+         // ...OMG MOAR TWEETS
+         // add code here to update UI
+      }
+   });
+
+// somewhere else in the code you can call something like this
+// it will populate ADD_ALL action to your subscribers
+homeTimeline.addAll(newTweetsIFetchedFromTheInternet);
 ```
-and for Ivy:
 
-```xml
-<dependency org="com.netflix.turbine" name="turbine" rev="2.minor.patch" />
-```
+There's more to the potato! You can override standard persistence layer (`KryoTransportLayer`) and have all of your items stored in a SQLite database. See `SQLiteTransportLayer`
 
-### Executable
+Including in your project
+=========================
 
-The standalone executable can also be found on Maven Central or in the Github Releases section.
-
-
-## Build
-
-* You need Java 8 or later.
-
-To build:
+You can either check out the repo manually or grab a snapshot `aar` which is hosted on sonatype repo. To do so, include this in your build.gradle file:
 
 ```
-$ git clone git@github.com:Netflix/Turbine.git
-$ cd Turbine/
-$ ./gradlew build
+dependencies {
+
+    repositories {
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        mavenCentral()
+        mavenLocal()
+    }
+
+    compile 'com.eyeem.potato:library:0.9.2.5-SNAPSHOT@aar'
+
+    // ...other dependencies
+}
 ```
 
- 
-## LICENSE
+Developed By
+============
 
-Copyright 2014 Netflix, Inc.
+* Lukasz Wisniewski
+* Tobias Heine
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+License
+=======
 
-<http://www.apache.org/licenses/LICENSE-2.0>
+    Copyright 2012-2015 EyeEm Mobile GmbH
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
