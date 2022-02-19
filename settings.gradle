@@ -1,3 +1,2 @@
-include ':hugo-annotations'
-include ':hugo-plugin'
-include ':hugo-runtime'
+include ':LC1', ':wear'
+include ':LC1', ':circularseekbar'

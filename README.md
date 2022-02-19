@@ -1,83 +1,78 @@
-Hugo
-====
+Light Controller
+================
 
-Annotation-triggered method call logging for your debug builds.
+![Promo Image](assets/promo.png)
 
-As a programmer, you often add log statements to print method calls, their arguments, their return
-values, and the time it took to execute. This is not a question. Every one of you does this.
-Shouldn't it be easier?
+Build Status
+------------
+[![Build Status](https://travis-ci.org/eliotstocker/Light-Controller.svg?branch=master)](https://travis-ci.org/eliotstocker/Light-Controller)
 
-Simply add `@DebugLog` to your methods and you will automatically get all of the things listed above
-logged for free.
+Description
+-----------
+The best way to control your LED Bulbs, Including Home and Lockscreen widgets
 
-```java
-@DebugLog
-public String getName(String first, String last) {
-  SystemClock.sleep(15); // Don't ever really do this!
-  return first + " " + last;
-}
-```
-```
-V/Example: ⇢ getName(first="Jake", last="Wharton")
-V/Example: ⇠ getName [16ms] = "Jake Wharton"
-```
+New Light Controller API Availabel here:
+http://eliotstocker.github.io/Light-ControllerAPI
 
-The logging will only happen in debug builds and the annotation itself is never present in the
-compiled class file for any build type. This means you can keep the annotation and check it into
-source control. It has zero effect on non-debug builds.
+have you got LED lights, but find yourself using the Lightswitch more often than not because of the need to open the app in order to simply turn on the lights? this app is for you, it was developed specifically in order to give you the light switches where they are most accessible. you choose where you want the switches, be it on one of your home screens, on the lock screen or both.
 
-Add it to your project today!
+The widget gives you easy access to switch each zone on and off as well as global control. also included is easy access to the main application for more advanced control.
 
-```groovy
-buildscript {
-  repositories {
-    mavenCentral()
-  }
+The application enables control of both RGBW bulbs and Dual White Bulbs, And you can now choose to turn on one or both sets of lighting zones.
 
-  dependencies {
-    classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-  }
-}
+We have started working on some extra lighting modes also light listening mode, where it will attempt to detect the beat of the music playing and pulse different colours to the music. A candle mode to emulate the flickering of a candle, along with the built in disco modes.
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.hugo'
-```
+Control LED Bulbs from:
+* AppLamp
+* EasyBulb
+* Limitless LED
+* MiLight
+* ilux
 
-Disable logging temporarily by adding the following:
+and some others also.
 
-```groovy
-hugo {
-  enabled false
-}
-```
+You will need the Wifi Controller box to access these lights from the application
 
-If you want to toggle logging at runtime, use `Hugo.setEnabled(true|false)`
+if the application doesn't work out of the box, you may need to setup the IP address of your controller box, by default the application will attempt to broadcast to the whole network, and find any available Bridge. this does not work in all setups.
 
+New Features Coming soon:
+* Full Control API (With Permission System)
+* Alarm Clock Plugin
+* Location Base Light Control Plugin
+* Tablet Interface
+* Internet Based Control
 
-Local Development
------------------
+This Project is Open source
 
-Working on this project? Here's some helpful Gradle tasks:
+Contributors:
+* Eliot Stocker
+* Louis Orleans
+* AppLamp (Thanks for Providing Hardware too!)
+* Harry Sibenaler
+* Matthew Nagel
 
- * `install` - Install plugin, runtime, and annotations into local repo.
- * `cleanExample` - Clean the example project build.
- * `assembleExample` - Build the example project. Must run `install` first.
- * `installExample` - Build and install the example project debug APK onto a device.
+Come and join us in the Issue tracker for new features and bug fixes.
 
+find the source on GitHub here:
+https://github.com/eliotstocker/Light-Controller
+Pull request and translations very welcome
+
+Change Log
+----------
+[Changes can be found here](changelog.md)
 
 License
+-------
+Light Controller is published under the [GPL V3 license](GPL.md)
+
+Libraies
 --------
-
-    Copyright 2013 Jake Wharton
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Light controller uses the following libraries:
+* [HoloColorPicker](https://github.com/LarsWerkman/HoloColorPicker) by [Lars Werkman](https://github.com/LarsWerkman)
+* [Android PagerSlidingTabStrip](https://github.com/astuetz/PagerSlidingTabStrip) by [Andreas Stütz](https://github.com/astuetz)
+* [Material Dialogs](https://github.com/afollestad/material-dialogs) by [Aidan Follestad](https://github.com/afollestad)
+* [Appcompat Android Support](https://developer.android.com/tools/support-library/features.html) by [Google](https://developer.android.com/)
+* [Material-Drawer](https://github.com/HeinrichReimer/material-drawer) by [HeinrichReimer](https://github.com/HeinrichReimer)
+* [CircularSeekBar](https://github.com/devadvance/circularseekbar) by [devadvance](https://github.com/devadvance)
+* [Google Play Services for Wear](https://developer.android.com/training/wearables/apps/packaging.html) by [Google](https://developer.android.com/)
+* [PebbleKit Android](https://github.com/pebble/pebble-android-sdk) by [Pebble](https://www.pebble.com/)
