@@ -1,18 +1,18 @@
-app/assets/opentraining-exercises/clone.sh
-app/assets/opentraining-exercises/list_files.php
-app/bin/
-app/gen/
-test/bin/
-test/gen/
-.metadata
+.DS_Store
+.*.swp
+*.pyc
+.gradle
+build
+.classpath
+*nocommit*
+*NodeLocalParallel
+*catalog-journal
+englink-log4j.log
+/bin
 
-app/svg/old/
+### Eclipse ###
+.settings/
 
-app/svg/.SVG
-
-# gradle
-/build
-/.gradle
-/.idea
-local.properties
-opentraining.iml
+### Intellij ###
+*.iml
+.idea/
