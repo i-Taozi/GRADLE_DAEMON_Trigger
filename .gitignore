@@ -1,26 +1,22 @@
-.DS_Store
-
-# Local properties
-dev.properties
-local.properties
-
-# Generated
-gen
-bin
-tmp
-
-# Eclipse
-.project
-.classpath
-.settings
-.checkstyle
+#eclipse
+/bin
+/.classpath
+/.project
+/.settings
 
 # IDEA
-out
 .idea
+classes
 *.iml
+/out
 
-# Gradle
-build
-.gradle
+#Gradle
+/.gradle
+/build
 
+# Mac
+.DS_Store
+
+# Other
+/nbproject/private/
+internal
